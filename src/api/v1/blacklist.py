@@ -36,12 +36,6 @@ async def show_blacklist(
 async def remove_from_blacklist(
     *, db: AsyncSession = Depends(get_session), id: int
 ) -> None:
-    db_object = await blacklist_service.get(db=db, id=id)
-    if db_object is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Host is not in blacklist",
-        )
-    host = db_object.host
+    # ошибки нет, так как SQL не ругается при попытке удалить несуществующий объект
     await blacklist_service.delete(db=db, id=id)
-    logger.info("Host %s removed from blacklist", host)
+    logger.info("Host with id %s removed from blacklist", id)
